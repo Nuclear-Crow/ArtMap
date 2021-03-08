@@ -238,8 +238,7 @@ public class HeadsCache {
 			//If mojang is disabled try and get it
 			if(!plugin.getConfiguration().HEAD_FETCH_MOJANG) {
 				ItemStack head = new ItemStack(Material.PLAYER_HEAD, 1);
-				SkullMeta meta = getHeadMeta(playerId);
-				meta = (SkullMeta) head.getItemMeta();
+				SkullMeta meta = (SkullMeta) head.getItemMeta();
 				OfflinePlayer player = ArtMap.instance().getServer().getOfflinePlayer(playerId);
 				if(player.hasPlayedBefore()) {
 					meta.setOwningPlayer(player);
