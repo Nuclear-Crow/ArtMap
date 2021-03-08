@@ -17,23 +17,9 @@
 	<modules>
 		<module>api</module>
 		<!-- spigot/paper compatibility -->
-		<module>compatibility/Spigot_1_13</module>
-		<module>compatibility/Spigot_1_14</module>
 		<module>compatibility/Spigot_1_16</module>
 		<!-- plugin compatibility -->
-		<module>compatibility/ASkyBlock</module>
-		<module>compatibility/BentoBox</module>
-		<module>compatibility/CMI</module>
 		<module>compatibility/Essentials</module>
-		<module>compatibility/Factions</module>
-		<module>compatibility/GriefPrevention</module>
-		<module>compatibility/GriefDefender</module>
-		<module>compatibility/MarriageMaster</module>
-		<module>compatibility/PlotSquared4</module>
-		<module>compatibility/PlotSquared5</module>
-		<module>compatibility/RedProtect</module>
-		<module>compatibility/Residence</module>
-		<module>compatibility/SabreFactions</module>
 		<module>compatibility/Towny</module>
 		<module>compatibility/USkyBlock</module>
 		<module>compatibility/WorldGuard</module>

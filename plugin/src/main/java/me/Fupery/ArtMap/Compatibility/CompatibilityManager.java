@@ -1,43 +1,25 @@
 package me.Fupery.ArtMap.Compatibility;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-
+import me.Fupery.ArtMap.ArtMap;
+import me.Fupery.ArtMap.Compatibility.impl.*;
+import me.Fupery.ArtMap.api.Colour.Palette;
+import me.Fupery.ArtMap.api.Compatability.EventListener;
+import me.Fupery.ArtMap.api.Compatability.ReflectionHandler;
+import me.Fupery.ArtMap.api.Compatability.RegionHandler;
+import me.Fupery.ArtMap.api.Easel.ClickType;
+import me.Fupery.ArtMap.api.IArtMap;
+import me.Fupery.ArtMap.api.Utils.Version;
+import me.Fupery.ArtMap.api.Utils.VersionHandler;
+import me.Fupery.ArtMap.api.Utils.VersionHandler.BukkitVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import me.Fupery.ArtMap.ArtMap;
-import me.Fupery.ArtMap.Compatibility.impl.ASkyBlockCompat;
-import me.Fupery.ArtMap.Compatibility.impl.BentoBoxCompat;
-import me.Fupery.ArtMap.Compatibility.impl.CMICompat;
-import me.Fupery.ArtMap.Compatibility.impl.GriefDefenderCompat;
-import me.Fupery.ArtMap.Compatibility.impl.GriefPreventionCompat;
-import me.Fupery.ArtMap.Compatibility.impl.MarriageMasterCompat;
-import me.Fupery.ArtMap.Compatibility.impl.Palette_1_13;
-import me.Fupery.ArtMap.Compatibility.impl.Palette_1_14;
-import me.Fupery.ArtMap.Compatibility.impl.Palette_1_16;
-import me.Fupery.ArtMap.Compatibility.impl.EssentialsCompat;
-import me.Fupery.ArtMap.Compatibility.impl.PlotSquared4Compat;
-import me.Fupery.ArtMap.Compatibility.impl.PlotSquared5Compat;
-import me.Fupery.ArtMap.Compatibility.impl.RedProtectCompat;
-import me.Fupery.ArtMap.Compatibility.impl.ResidenceCompat;
-import me.Fupery.ArtMap.Compatibility.impl.SabreFactionsCompat;
-import me.Fupery.ArtMap.Compatibility.impl.TownyCompat;
-import me.Fupery.ArtMap.Compatibility.impl.USkyBlockCompat;
-import me.Fupery.ArtMap.Compatibility.impl.WorldGuardCompat;
-import me.Fupery.ArtMap.api.IArtMap;
-import me.Fupery.ArtMap.api.Colour.Palette;
-import me.Fupery.ArtMap.api.Compatability.EventListener;
-import me.Fupery.ArtMap.api.Compatability.ReflectionHandler;
-import me.Fupery.ArtMap.api.Compatability.RegionHandler;
-import me.Fupery.ArtMap.api.Easel.ClickType;
-import me.Fupery.ArtMap.api.Utils.Version;
-import me.Fupery.ArtMap.api.Utils.VersionHandler;
-import me.Fupery.ArtMap.api.Utils.VersionHandler.BukkitVersion;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
 
 public class CompatibilityManager implements RegionHandler {
     private List<RegionHandler> regionHandlers;
@@ -49,24 +31,10 @@ public class CompatibilityManager implements RegionHandler {
         regionHandlers = new ArrayList<>();
         eventListeners = new ArrayList<>();
         loadRegionHandler("WorldGuard",WorldGuardCompat.class, "WorldGuard 7");
-        //Disable as it is 1.12 and lower
-        //loadRegionHandler("Factions",FactionsCompat.class, "Factions");
-        loadRegionHandler("Factions",SabreFactionsCompat.class, "Sabre Factions");
-        loadRegionHandler("GriefDefender",GriefDefenderCompat.class,"Grief Defender");
-        loadRegionHandler("GriefPrevention",GriefPreventionCompat.class,"Grief Prevention");
-        loadRegionHandler("RedProtect",RedProtectCompat.class, "Red Protect");
         //likely can be removed as 1.12 and lower
-        loadRegionHandler("ASkyBlock",ASkyBlockCompat.class, "ASkyBlock");
-        loadRegionHandler("uSkyBlock",USkyBlockCompat.class, "uSkyBlock");
-        loadRegionHandler("BentoBox",BentoBoxCompat.class, "BentoBox/BSkyBlock");
-        loadRegionHandler("PlotSquared",PlotSquared4Compat.class, "Plot Squared 4", new Version(4), new Version(5));
-        loadRegionHandler("PlotSquared",PlotSquared5Compat.class, "Plot Squared 5", new Version(5), new Version(9999));
-        loadRegionHandler("Residence",ResidenceCompat.class, "Residence");
         loadRegionHandler("Towny",TownyCompat.class, "Towny");
         reflectionHandler = loadReflectionHandler();
         //Event handlers
-        loadEventListener("MarriageMaster", MarriageMasterCompat.class, "Marriage Master");
-        loadEventListener("CMI", CMICompat.class, "CMI");
         loadEventListener("Essentials", EssentialsCompat.class, "Essentials");
 
         if (!(reflectionHandler instanceof VanillaReflectionHandler))
@@ -77,15 +45,7 @@ public class CompatibilityManager implements RegionHandler {
                     regionHandler.getClass().getSimpleName().replace("Compat", "")));
         }
 
-        //figure out palette version to load
-        BukkitVersion version = VersionHandler.checkVersion();
-        if(version.isLessOrEqualTo(BukkitVersion.v1_13)) {
-            palette = new Palette_1_13();
-        } else if(version.isLessThan(BukkitVersion.v1_16)) {
-            palette = new Palette_1_14();
-        } else {
-            palette = new Palette_1_16();
-        }
+        palette = new Palette_1_16();
     }
 
     public boolean isPluginLoaded(String pluginName) {

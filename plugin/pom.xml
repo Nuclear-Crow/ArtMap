@@ -8,7 +8,7 @@
 		<groupId>com.gitlab.blockstack</groupId>
 		<artifactId>ArtMap-parent</artifactId>
 		<version>3.8.1</version>
-		<relativePath>..</relativePath>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<build>
 		<resources>
@@ -84,6 +84,12 @@
 			</plugin>
 		</plugins>
 	</build>
+	<repositories>
+		<repository>
+			<id>papermc</id>
+			<url>https://papermc.io/repo/repository/maven-public/</url>
+		</repository>
+	</repositories>
 	<dependencies>
 		<dependency>
 			<groupId>com.gitlab.blockstack</groupId>
@@ -96,9 +102,9 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.spigotmc</groupId>
-			<artifactId>spigot-api</artifactId>
-			<version>1.14.4-R0.1-SNAPSHOT</version>
+			<groupId>com.destroystokyo.paper</groupId>
+			<artifactId>paper-api</artifactId>
+			<version>1.16.5-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -122,33 +128,7 @@
 		<!--Artmap Spigot/Paper version compatibility-->
 		<dependency>
 			<groupId>com.gitlab.blockstack</groupId>
-			<artifactId>Spigot_1_13</artifactId>
-			<version>3.8.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.gitlab.blockstack</groupId>
-			<artifactId>Spigot_1_14</artifactId>
-			<version>3.8.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.gitlab.blockstack</groupId>
 			<artifactId>Spigot_1_16</artifactId>
-			<version>3.8.1</version>
-		</dependency>
-		<!--Artmap plugin compatibility addons-->
-		<dependency>
-			<groupId>com.gitlab.blockstack</groupId>
-			<artifactId>ASkyBlock</artifactId>
-			<version>3.8.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.gitlab.blockstack</groupId>
-			<artifactId>BentoBox</artifactId>
-			<version>3.8.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.gitlab.blockstack</groupId>
-			<artifactId>CMI</artifactId>
 			<version>3.8.1</version>
 		</dependency>
 		<dependency>
@@ -158,57 +138,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.gitlab.blockstack</groupId>
-			<artifactId>Factions</artifactId>
-			<version>3.8.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.gitlab.blockstack</groupId>
-			<artifactId>GriefDefender</artifactId>
-			<version>3.8.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.gitlab.blockstack</groupId>
-			<artifactId>GriefPrevention</artifactId>
-			<version>3.8.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.gitlab.blockstack</groupId>
-			<artifactId>MarriageMaster</artifactId>
-			<version>3.8.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.gitlab.blockstack</groupId>
-			<artifactId>PlotSquared4</artifactId>
-			<version>3.8.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.gitlab.blockstack</groupId>
-			<artifactId>PlotSquared5</artifactId>
-			<version>3.8.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.gitlab.blockstack</groupId>
-			<artifactId>RedProtect</artifactId>
-			<version>3.8.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.gitlab.blockstack</groupId>
-			<artifactId>Residence</artifactId>
-			<version>3.8.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.gitlab.blockstack</groupId>
-			<artifactId>SabreFactions</artifactId>
-			<version>3.8.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.gitlab.blockstack</groupId>
 			<artifactId>Towny</artifactId>
-			<version>3.8.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.gitlab.blockstack</groupId>
-			<artifactId>USkyBlock</artifactId>
 			<version>3.8.1</version>
 		</dependency>
 		<dependency>
