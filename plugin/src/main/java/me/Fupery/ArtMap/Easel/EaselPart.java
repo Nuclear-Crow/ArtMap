@@ -4,7 +4,9 @@ import me.Fupery.ArtMap.ArtMap;
 import static org.bukkit.entity.EntityType.ARMOR_STAND;
 import static org.bukkit.entity.EntityType.ITEM_FRAME;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
@@ -95,13 +97,13 @@ public enum EaselPart {
 	public Entity spawn(Location easelLocation, BlockFace facing) {
 
 		if (this == SIGN) {
-			easelLocation.getBlock().setType(ArtMap.instance().getBukkitVersion().getVersion().getWallSign());
+			easelLocation.getBlock().setType(Material.OAK_WALL_SIGN);
 			WallSign bd = (WallSign) easelLocation.getBlock().getBlockData();
 			bd.setFacing(getSignFacing(facing));
 			easelLocation.getBlock().setBlockData(bd, false);
 
-			Sign sign = ((Sign) easelLocation.getBlock().getState());
-			sign.setLine(3, ARBITRARY_SIGN_ID);
+			Sign sign = ((Sign) easelLocation.getBlock().getState(false));
+			sign.line(3, Component.text(ARBITRARY_SIGN_ID));
 			sign.update(true, false);
 
 		} else {

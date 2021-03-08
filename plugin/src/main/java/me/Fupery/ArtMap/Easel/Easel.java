@@ -7,8 +7,10 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
@@ -125,9 +127,9 @@ public class Easel {
     }
 
     private boolean hasSign() {
-        BlockState state = location.getBlock().getState();
-        return (location.getBlock().getType() == ArtMap.instance().getBukkitVersion().getVersion().getWallSign()
-                && state instanceof Sign && ((Sign) state).getLine(3).equals(EaselPart.ARBITRARY_SIGN_ID));
+        BlockState state = location.getBlock().getState(false);
+        return (Tag.WALL_SIGNS.isTagged(location.getBlock().getType()) && state instanceof Sign
+                && ((Sign) state).line(3).equals(Component.text(EaselPart.ARBITRARY_SIGN_ID)));
     }
 
     /**

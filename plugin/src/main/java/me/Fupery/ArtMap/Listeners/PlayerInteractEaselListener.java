@@ -1,6 +1,8 @@
 package me.Fupery.ArtMap.Listeners;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
@@ -139,10 +141,10 @@ class PlayerInteractEaselListener implements RegisteredListener {
 
     private boolean checkSignBreak(Block block, Cancellable event) {
 
-        if (block.getType() == ArtMap.instance().getBukkitVersion().getVersion().getWallSign()) {
-            Sign sign = ((Sign) block.getState());
+        if (Tag.WALL_SIGNS.isTagged(block.getType())) {
+            Sign sign = ((Sign) block.getState(false));
 
-            if (sign.getLine(3).equals(EaselPart.ARBITRARY_SIGN_ID)) {
+            if (sign.line(3).equals(Component.text(EaselPart.ARBITRARY_SIGN_ID))) {
 
                 if (ArtMap.instance().getEasels().containsKey(block.getLocation())
                         || Easel.checkForEasel(block.getLocation())) {
