@@ -80,10 +80,11 @@ public abstract class ListMenu extends CacheableMenu {
             }
         }
         
-        if(cachedButtons == null) {
+        if (cachedButtons == null) {
             try {
                 cachedButtons = getListItems().get();
             } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
                 ArtMap.instance().getLogger().severe("Interrupted creating menu buttons!");
             }
         }

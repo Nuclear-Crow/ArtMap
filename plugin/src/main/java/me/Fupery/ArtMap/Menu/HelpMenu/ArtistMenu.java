@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -116,12 +117,14 @@ public class ArtistMenu extends ListMenu implements ChildMenu {
 			this.artist = artist;
 
 			SkullMeta meta = (SkullMeta) getItemMeta();
-			if(loadHeads) {
+			if(loadHeads && meta.hasDisplayName()) {
 				meta = ArtMap.instance().getHeadsCache().getHeadMeta(artist);
 				this.artistName = meta.getDisplayName();
 			} else {
-				this.artistName = artist.toString();
-				meta.setDisplayName(artist.toString());
+				OfflinePlayer player = Bukkit.getOfflinePlayer(artist);
+				this.artistName = player.getName();
+				meta.setDisplayName(this.artistName);
+				meta.setOwningPlayer(player);
 			}
 			meta = meta.clone();
 
