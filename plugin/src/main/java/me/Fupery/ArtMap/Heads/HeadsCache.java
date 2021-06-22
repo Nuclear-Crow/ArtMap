@@ -49,6 +49,7 @@ public class HeadsCache {
 	private static String					API_PROFILE_LINK	= "https://sessionserver.mojang.com/session/minecraft/profile/";
 
 	private static final Map<UUID, TextureData>	textureCache	= Collections.synchronizedMap( new HashMap<>());
+	private static final Map<UUID, SkullMeta> skullMetaCache = new HashMap<>();
 	/** Map to convert names to UUIDs for players that have never logged in to the server.
 	 * This is temporary till DB schema update that adds names to db.
 	 */
@@ -237,12 +238,16 @@ public class HeadsCache {
 		if (data == null) {
 			//If mojang is disabled try and get it
 			if(!plugin.getConfiguration().HEAD_FETCH_MOJANG) {
+				if (skullMetaCache.containsKey(playerId)) {
+					return skullMetaCache.get(playerId);
+				}
 				ItemStack head = new ItemStack(Material.PLAYER_HEAD, 1);
 				SkullMeta meta = (SkullMeta) head.getItemMeta();
 				OfflinePlayer player = ArtMap.instance().getServer().getOfflinePlayer(playerId);
 				if(player.hasPlayedBefore()) {
 					meta.setOwningPlayer(player);
 					meta.setDisplayName(player.getName());
+					skullMetaCache.put(playerId, meta);
 					head.setItemMeta(meta);
 					return meta;
 				}
@@ -285,7 +290,7 @@ public class HeadsCache {
 	 * @return The current cache size.
 	 */
 	public int getCacheSize() {
-		return textureCache.size();
+		return skullMetaCache.size();
 	}
 
 	/*
