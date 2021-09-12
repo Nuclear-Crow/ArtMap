@@ -1,5 +1,6 @@
 package me.Fupery.ArtMap.Listeners;
 
+import com.destroystokyo.paper.event.block.BlockDestroyEvent;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Tag;
@@ -95,7 +96,7 @@ class PlayerInteractEaselListener implements RegisteredListener {
     }
 
     @EventHandler
-    public void onBlockPhysics(BlockPhysicsEvent event) {
+    public void onBlockPhysics(BlockDestroyEvent event) {
         checkSignBreak(event.getBlock(), event);
     }
 

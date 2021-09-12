@@ -130,12 +130,12 @@
 			<artifactId>paper-api</artifactId>
 			<version>1.16.5-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
-		</depedependency>
+		</dependency>
+		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<version>2.5</version>
-            ndency>
-            <	<scope>provided</scope>
+            <scope>provided</scope>
 		</dependency>
 		<dependency>
             <groupId>com.google.guava</groupId>
