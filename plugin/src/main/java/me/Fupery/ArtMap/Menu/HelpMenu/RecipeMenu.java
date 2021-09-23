@@ -51,6 +51,8 @@ public class RecipeMenu extends BasicMenu implements ChildMenu {
                 new StaticButton(ArtMap.instance().getBukkitVersion().getVersion().getSign(), Lang.Array.INFO_RECIPES.get()),
                 new RecipeButton(ArtMaterial.EASEL),
                 new RecipeButton(ArtMaterial.CANVAS),
+                new RecipeButton(ArtMaterial.MEDIUM_CANVAS),
+                new RecipeButton(ArtMaterial.LARGE_CANVAS),
                 new RecipeButton(ArtMaterial.PAINT_BRUSH),
             });
         }

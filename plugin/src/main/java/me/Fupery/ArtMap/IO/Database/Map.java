@@ -45,8 +45,8 @@ public class Map {
         return new File(rootDir + File.separator + ArtMap.instance().getConfiguration().WORLD + File.separator + "data");
     }
 
-    public CompressedMap compress() throws IOException {
-        return CompressedMap.compress(getMap());
+    public CompressedMap compress(int resolution) throws IOException {
+        return CompressedMap.compress(getMap(), resolution);
     }
 
     public byte[] readData() {

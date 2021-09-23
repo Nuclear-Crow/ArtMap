@@ -68,8 +68,8 @@ public class DatabaseTest {
 
         Player player = mocks.getRandomMockPlayers(1)[0];
         // mock CompressedMap
-        CompressedMap mockCompressedMap = CompressedMap.compress(1, new byte[Map.Size.MAX.value]);
-        MapArt art = new MapArt(1, "testArt", player.getUniqueId(), player.getName(), new Date());
+        CompressedMap mockCompressedMap = CompressedMap.compress(1, new byte[Map.Size.MAX.value], 4);
+        MapArt art = new MapArt(1, "testArt", player.getUniqueId(), player.getName(), new Date(), 4);
 
         db.saveArtwork(art, mockCompressedMap);
         MapArt check = db.getArtwork(1);
@@ -86,8 +86,8 @@ public class DatabaseTest {
 
         Player player = mocks.getRandomMockPlayers(1)[0];
         // mock CompressedMap
-        CompressedMap mockCompressedMap = CompressedMap.compress(1, new byte[Map.Size.MAX.value]);
-        MapArt art = new MapArt(1, "testArt", player.getUniqueId(), player.getName(), new Date());
+        CompressedMap mockCompressedMap = CompressedMap.compress(1, new byte[Map.Size.MAX.value], 4);
+        MapArt art = new MapArt(1, "testArt", player.getUniqueId(), player.getName(), new Date(), 4);
 
         db.saveArtwork(art, mockCompressedMap);
         db.saveArtwork(art, mockCompressedMap); // should throw the exception
@@ -388,7 +388,7 @@ public class DatabaseTest {
         Player[] player = mocks.getRandomMockPlayers(2);
 
         MapArt savedArt = db.saveArtwork(mockCanvas[0], "test", player[0]);
-        MapArt test = new MapArt(32, savedArt.getTitle(), savedArt.getArtistPlayer().getUniqueId(), savedArt.getArtistName(),savedArt.getDate());
+        MapArt test = new MapArt(32, savedArt.getTitle(), savedArt.getArtistPlayer().getUniqueId(), savedArt.getArtistName(),savedArt.getDate(), 4);
         db.saveArtwork(mockCanvas[1], "test2", player[0]);
         db.saveArtwork(mockCanvas[2], "testPlayer2_1", player[1]);
         Assert.assertNotNull("Database save returned null!", savedArt);

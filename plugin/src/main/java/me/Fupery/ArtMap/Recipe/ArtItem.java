@@ -5,8 +5,12 @@ import static org.bukkit.ChatColor.GOLD;
 import static org.bukkit.ChatColor.ITALIC;
 import static org.bukkit.ChatColor.YELLOW;
 
+import java.sql.SQLException;
+import java.util.Collections;
 import java.util.logging.Level;
 
+import me.Fupery.ArtMap.Easel.Canvas;
+import me.Fupery.ArtMap.Exception.ArtMapException;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -24,7 +28,9 @@ public class ArtItem {
     public static final String PREVIEW_KEY = ChatColor.AQUA.toString() + ChatColor.ITALIC + "Preview Artwork";
     public static final String COPY_KEY = ChatColor.AQUA.toString() + ChatColor.ITALIC + "Artwork Copy";
     public static final String PAINT_BRUSH = ChatColor.AQUA.toString() + ChatColor.ITALIC + "Paint Brush";
-    
+    public static final String MEDIUM_CANVAS_KEY = ChatColor.AQUA.toString() + ChatColor.ITALIC + "ArtMap Medium Canvas";
+    public static final String LARGE_CANVAS_KEY = ChatColor.AQUA.toString() + ChatColor.ITALIC + "ArtMap Large Canvas";
+
     private ArtItem() {
         //hide consstructor
     }

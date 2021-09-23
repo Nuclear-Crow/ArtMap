@@ -18,9 +18,9 @@ public class PixelTableManager {
         this.pitchBounds = pitchBounds;
     }
 
-    public static PixelTableManager buildTables(JavaPlugin plugin) {
+    public static PixelTableManager buildTables(JavaPlugin plugin, int resolutionFactor) {
         PixelTable table;
-        int mapResolutionFactor = 4;// TODO: 22/09/2016
+        int mapResolutionFactor = resolutionFactor;// TODO: 22/09/2016
         try {
             table = DataTables.loadTable(mapResolutionFactor);
             return new PixelTableManager(mapResolutionFactor, table.getYawBounds(), table.getPitchBounds());

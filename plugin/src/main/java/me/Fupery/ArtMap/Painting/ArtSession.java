@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 
+import me.Fupery.ArtMap.Easel.Canvas;
+import me.Fupery.ArtMap.Exception.ArtMapException;
+import me.Fupery.ArtMap.IO.PixelTableManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -53,7 +56,15 @@ public class ArtSession implements IArtSession {
 
     ArtSession(Player player, Easel easel, Map map, int yawOffset) {
         this.easel = easel;
-        canvas = new CanvasRenderer(map, yawOffset);
+        int resolution = 4;
+        try {
+            resolution = Canvas.getCanvas(easel.getItem()).getResolution();
+        }
+        catch (SQLException | ArtMapException ex) {
+            ArtMap.instance().getLogger().severe("Could not load art session: failed to get canvas");
+        }
+        PixelTableManager pixelTable = ArtMap.getPixelTable(resolution);
+        canvas = new CanvasRenderer(map, yawOffset, pixelTable);
         currentBrush = null;
         lastStroke = System.currentTimeMillis();
         DYE = new Dye(canvas, player);
@@ -75,9 +86,17 @@ public class ArtSession implements IArtSession {
             return false;
         }
 
+        int resolution = 4;
+        try {
+            resolution = Canvas.getCanvas(this.easel.getItem()).getResolution();
+        }
+        catch (SQLException | ArtMapException ex) {
+            ArtMap.instance().getLogger().severe("Could not load art session: failed to get canvas");
+        }
+
         // Run tasks
         try {
-            ArtMap.instance().getArtDatabase().restoreMap(map, true, false);
+            ArtMap.instance().getArtDatabase().restoreMap(map, true, false, resolution);
             ArtMap.instance().getScheduler().SYNC.runLater(() -> {
                 if (player.getVehicle() != null)
                     Lang.ActionBar.PAINTING.send(player);

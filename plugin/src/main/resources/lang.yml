@@ -109,6 +109,8 @@ RECIPE_PLAYER_MAP_COPY_MISSING: "§4§lYou do not have an empty map in your inve
 RECIPE_HELP: "§a/art §2for help"
 RECIPE_EASEL_NAME: "Easel"
 RECIPE_CANVAS_NAME: "Canvas"
+RECIPE_MEDIUM_CANVAS_NAME: "Medium Canvas"
+RECIPE_LARGE_CANVAS_NAME: "Large Canvas"
 RECIPE_PAINT_BRUSH_NAME: "§e•§6§lSave§e•"
 RECIPE_ARTWORK_ARTIST: "by %s" # '%s' is replaced with the name of the artist who created this artwork
 
@@ -218,6 +220,17 @@ RECIPE_EASEL:
   - "§cany painting on it."
   - "§cSave first!"
 RECIPE_CANVAS:
+  - "§7(32x32)"
+  - "§b§oPaint on me!"
+  - "§7Use on an §aEasel"
+  - "§7to start painting."
+RECIPE_MEDIUM_CANVAS:
+  - "§c(64x64)"
+  - "§b§oPaint on me!"
+  - "§7Use on an §aEasel"
+  - "§7to start painting."
+RECIPE_LARGE_CANVAS:
+  - "§4(128x128)"
   - "§b§oPaint on me!"
   - "§7Use on an §aEasel"
   - "§7to start painting."

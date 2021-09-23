@@ -19,6 +19,7 @@ final class ArtTable extends SQLiteTable {
                 "id      INT               NOT NULL UNIQUE," +
                 "artist  varchar(32)       NOT NULL," +
                 "date    varchar(32)       NOT NULL," +
+                "resolution INT," +
                 "PRIMARY KEY (title)" +
                 ");");
     }
@@ -104,7 +105,17 @@ final class ArtTable extends SQLiteTable {
         } else {
             name = Bukkit.getOfflinePlayer(artist).getName();
         }
-        return new MapArt(id, title, artist,name,date);
+        int resolution;
+        try {
+            resolution = set.getInt("resolution");
+            if (set.wasNull()) {
+                resolution = 4;
+            }
+        }
+        catch (SQLException ex) {
+            resolution = 4;
+        }
+        return new MapArt(id, title, artist,name,date, resolution);
     }
 
 
@@ -272,7 +283,8 @@ final class ArtTable extends SQLiteTable {
                 statement.setInt(2, art.getMapId());
                 statement.setString(3, art.getArtist().toString());
                 statement.setString(4, art.getDate());
+                statement.setInt(5, art.getResolution());
             }
-        }.execute("INSERT INTO " + TABLE + " (title, id, artist, date) VALUES(?,?,?,?);");
+        }.execute("INSERT INTO " + TABLE + " (title, id, artist, date, resolution) VALUES(?,?,?,?,?);");
     }
 }

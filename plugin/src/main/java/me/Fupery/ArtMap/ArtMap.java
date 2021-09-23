@@ -55,7 +55,9 @@ public class ArtMap extends JavaPlugin implements IArtMap {
 	private RecipeLoader recipeLoader;
 	private CompatibilityManager compatManager;
 	private ProtocolHandler protocolHandler;
-	private PixelTableManager pixelTable;
+	private PixelTableManager pixelTable32;
+	private PixelTableManager pixelTable64;
+	private PixelTableManager pixelTable128;
 	private Configuration config;
 	private EventManager eventManager;
 	private PreviewManager previewManager;
@@ -134,8 +136,15 @@ public class ArtMap extends JavaPlugin implements IArtMap {
 		return this.easels;
 	}
 
-	public PixelTableManager getPixelTable() {
-		return this.pixelTable;
+	public static PixelTableManager getPixelTable(int resolutionFactor) {
+		if (resolutionFactor == 4)
+			return (instance()).pixelTable32;
+		else if (resolutionFactor == 2)
+			return (instance()).pixelTable64;
+		else if (resolutionFactor == 1) {
+			return (instance()).pixelTable128;
+		}
+		return null;
 	}
 
 	public HeadsCache getHeadsCache() {
@@ -179,7 +188,7 @@ public class ArtMap extends JavaPlugin implements IArtMap {
 			database = new Database(this);
 			dbUpgradeNeeded = this.checkIfDatabaseUpgradeNeeded();
 			this.getLogger().info(" MC version: " + bukkitVersion.toString() ) ;
-			if ((pixelTable = PixelTableManager.buildTables(this)) == null) {
+			if ((this.pixelTable32 = PixelTableManager.buildTables(this, 4)) == null || (this.pixelTable64 = PixelTableManager.buildTables(this, 2)) == null || (this.pixelTable128 = PixelTableManager.buildTables(this, 1)) == null) {
 				getLogger().warning(Lang.INVALID_DATA_TABLES.get());
 				getPluginLoader().disablePlugin(this);
 				return;

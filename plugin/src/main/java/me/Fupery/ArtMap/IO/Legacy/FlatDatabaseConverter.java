@@ -87,14 +87,14 @@ public class FlatDatabaseConverter extends DatabaseConverter {
                     sendMessage(String.format("    Ignoring '%s' (failed to access map data) ...", title));
                     continue;
                 }
-                MapArt artwork = new MapArt(mapIDValue, title, player.getUniqueId(), player.getName(), date);
+                MapArt artwork = new MapArt(mapIDValue, title, player.getUniqueId(), player.getName(), date, 4);
                 try {
                     if (ArtMap.instance().getArtDatabase().containsArtwork(artwork, true)) {
                         sendMessage(String.format("    Ignoring '%s' (already exists in database) ...", title));
                     } else {
                         sendMessage(String.format("    Converting '%s' ...", title));
                         try {
-                            artList.add(new ArtworkExport(artwork, new Map(mapView).compress()));
+                            artList.add(new ArtworkExport(artwork, new Map(mapView).compress(4)));
                         } catch (IOException e) {
                             sendMessage(String.format("    Failure converting '%s'!!!", title));
                             ArtMap.instance().getLogger().log(Level.SEVERE, "Failure converting: " + title, e);

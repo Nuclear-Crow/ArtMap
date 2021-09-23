@@ -1,8 +1,11 @@
 package me.Fupery.ArtMap.Easel;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Level;
 
+import me.Fupery.ArtMap.Recipe.ArtItem;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -68,7 +71,7 @@ public final class EaselEvent {
 				ItemStack itemInHand = player.getInventory().getItemInMainHand();
 				ArtMaterial material = ArtMaterial.getCraftItemType(itemInHand);
 
-				if (material == ArtMaterial.CANVAS) {
+				if (material == ArtMaterial.CANVAS || material == ArtMaterial.MEDIUM_CANVAS || material == ArtMaterial.LARGE_CANVAS) {
 					// Mount a canvas on the easel
 					Map map = null;
 					try {
@@ -84,7 +87,7 @@ public final class EaselEvent {
 					return;
 				}
 				map.update(player);
-				mountCanvas(itemInHand, new Canvas(map));
+				mountCanvas(itemInHand, new Canvas(map, material));
 			} else if (material == ArtMaterial.MAP_ART) {
 				// Edit an artwork on the easel
 				ArtMap.instance().getScheduler().ASYNC.run(() -> {
@@ -115,7 +118,17 @@ public final class EaselEvent {
 								ArtMap.instance().getLogger().log(Level.SEVERE, "Error placing art on easel for edit!",e );
 							}
 						} else if ( unsaved ) {
-							Canvas canvas = new Canvas(id);
+							Canvas canvas;
+							List<String> lore = itemInHand.getItemMeta().getLore();
+							if (lore.contains(ArtItem.LARGE_CANVAS_KEY)) {
+								canvas = new Canvas(id, 1);
+							}
+							else if (lore.contains(ArtItem.MEDIUM_CANVAS_KEY)) {
+								canvas = new Canvas(id, 2);
+							}
+							else {
+								canvas = new Canvas(id, 4);
+							}
 							mountCanvas(itemInHand, canvas);
 						} else {
 							Lang.ActionBar.NEED_CANVAS.send(player);

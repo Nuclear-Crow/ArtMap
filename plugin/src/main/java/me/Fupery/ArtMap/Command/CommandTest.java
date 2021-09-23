@@ -67,8 +67,8 @@ class CommandTest extends AsyncCommand {
                     System.out.println("Mapvies is null! :: " + map.getMapId());
                     throw new Exception("null mapaview!");
                 }
-                MapArt mapArt = new MapArt(map.getMapId(), name, artist, null, date);
-                CompressedMap cMap = CompressedMap.compress(map.getMap());
+                MapArt mapArt = new MapArt(map.getMapId(), name, artist, null, date, 4);
+                CompressedMap cMap = CompressedMap.compress(map.getMap(), 4);
                 ArtMap.instance().getArtDatabase().saveArtwork(mapArt, cMap);
             } catch(Exception e) {
                 ArtMap.instance().getLogger().log(Level.SEVERE, "Failure!", e);

@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public interface MapFormatter {
 
-    byte[] generateBLOB(byte[] mapData) throws IOException;
+    byte[] generateBLOB(byte[] mapData, int resolution) throws IOException;
 
-    byte[] readBLOB(byte[] blobData) throws IOException;
+    byte[] readBLOB(byte[] blobData, int resolution) throws IOException;
 }

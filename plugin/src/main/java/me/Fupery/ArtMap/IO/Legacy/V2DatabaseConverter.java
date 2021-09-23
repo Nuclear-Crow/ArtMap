@@ -149,9 +149,9 @@ public class V2DatabaseConverter extends DatabaseConverter {
             int id = set.getInt("id");
             UUID artist = UUID.fromString(set.getString("artist"));
             String date = set.getString("date");
-            MapArt art = new MapArt(id, title, artist, Bukkit.getOfflinePlayer(artist).getName(), date);
-            byte[] map = new f32x32().readBLOB(set.getBytes("map"));
-            CompressedMap data = CompressedMap.compress(id, map);
+            MapArt art = new MapArt(id, title, artist, Bukkit.getOfflinePlayer(artist).getName(), date, 4);
+            byte[] map = new f32x32().readBLOB(set.getBytes("map"), 4);
+            CompressedMap data = CompressedMap.compress(id, map, 4);
             return new RichMapArt(art, data);
         }
 

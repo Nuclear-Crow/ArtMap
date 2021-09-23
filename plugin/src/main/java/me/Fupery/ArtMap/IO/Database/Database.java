@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.UUID;
 import java.util.logging.Level;
 
+import me.Fupery.ArtMap.Easel.Easel;
+import me.Fupery.ArtMap.Easel.EaselPart;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -129,7 +131,7 @@ public final class Database {
 						// Force update of map data
 						mapArt.getMap().setMap(ArtMap.instance().getReflection().getMap(newView), true);
 						// Update database
-						CompressedMap map = CompressedMap.compress(copy.getOriginalId(), newView);
+						CompressedMap map = CompressedMap.compress(copy.getOriginalId(), newView, art.getResolution());
 						maps.updateMap(map);
 						this.deleteInProgressArt(new Map(copy.getMapId())); // recycle the copy
 						return mapArt;
@@ -143,9 +145,9 @@ public final class Database {
 			}
 		}
 		// new artwork
-		mapArt = new MapArt(art.getMapId(), title, player.getUniqueId(),player.getName(),new Date());
+		mapArt = new MapArt(art.getMapId(), title, player.getUniqueId(),player.getName(),new Date(), art.getResolution());
 		MapView mapView = ArtMap.getMap(art.getMapId());
-		CompressedMap map = CompressedMap.compress(mapView);
+		CompressedMap map = CompressedMap.compress(mapView, art.getResolution());
 		artworks.addArtwork(mapArt);
 		if (maps.containsMap(map.getId())) {
 			maps.updateMap(map);
@@ -328,7 +330,12 @@ public final class Database {
      * @throws IOException
      */
     public void saveInProgressArt(Map map, byte[] data) throws SQLException, IOException {
-        CompressedMap compressedMap = CompressedMap.compress(map.getMapId(), data);
+        MapArt art = ArtMap.instance().getArtDatabase().getArtwork(map.getMapId());
+        int resolution = 4;
+        if (art != null) {
+            resolution = art.getResolution();
+        }
+        CompressedMap compressedMap = CompressedMap.compress(map.getMapId(), data, resolution);
         if (maps.containsMap(map.getMapId())) {
             maps.updateMap(compressedMap);
         } else {
@@ -366,9 +373,9 @@ public final class Database {
      * @throws IllegalAccessException
      * @throws NoSuchFieldException
      */
-    public boolean restoreMap(Map map, boolean softRepair, boolean hardRepair) {
+    public boolean restoreMap(Map map, boolean softRepair, boolean hardRepair, int resolution) {
         try {
-            return restoreMapData(map, softRepair);
+            return restoreMapData(map, softRepair, resolution);
         } catch (Throwable t) {
             ArtMap.instance().getLogger().log(Level.SEVERE,"Map ID:" + map.getMapId() + " is severly corrupted!" ,t);   
         }
@@ -386,7 +393,7 @@ public final class Database {
             try {
                 Files.copy(this.getClass().getResourceAsStream("/blank.dat"), dataFile.toPath());
                 ArtMap.instance().getLogger().warning("Minecraft map data file reset.  A server restart might be necessary to continue the repair.");
-                return restoreMapData(map, softRepair);
+                return restoreMapData(map, softRepair, resolution);
             } catch (IOException e) {
                 ArtMap.instance().getLogger().log(Level.SEVERE,"Failed to copy blank map for data reset." ,e);
                 return true;
@@ -398,7 +405,7 @@ public final class Database {
         return true;
     }
 
-    private boolean restoreMapData(Map map, boolean repair)
+    private boolean restoreMapData(Map map, boolean repair, int resolution)
             throws NoSuchFieldException, IllegalAccessException, SQLException {
         byte[] data = map.readData();
             int oldMapHash = Arrays.hashCode(data);
@@ -407,7 +414,7 @@ public final class Database {
                 ArtMap.instance().getLogger().warning("Map ID:" + map.getMapId() + " is corrupted! ");
                 if(repair) {
                     ArtMap.instance().getLogger().warning("Repair flag set attempting to repair.");
-                    map.setMap(maps.getMap(map.getMapId()).decompressMap(), true);
+                    map.setMap(maps.getMap(map.getMapId()).decompressMap(resolution), true);
                 }
                 return true;
             }

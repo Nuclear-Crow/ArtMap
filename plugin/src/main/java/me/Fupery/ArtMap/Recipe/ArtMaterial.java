@@ -8,7 +8,7 @@ import me.Fupery.ArtMap.api.Config.Lang;
 
 public enum ArtMaterial {
 
-	EASEL, CANVAS, MAP_ART, PAINT_BRUSH, COMPASS, COAL, FEATHER, PAINTBUCKET, SPONGE;
+	EASEL, CANVAS, MAP_ART, PAINT_BRUSH, COMPASS, COAL, FEATHER, PAINTBUCKET, SPONGE, MEDIUM_CANVAS, LARGE_CANVAS;
 
     private CustomItem artItem;
 
@@ -16,9 +16,17 @@ public enum ArtMaterial {
         EASEL.artItem = new ArtItem.CraftableItem("EASEL", Material.ARMOR_STAND, ArtItem.EASEL_KEY)
 				.name(Lang.RECIPE_EASEL_NAME).tooltip(Lang.Array.RECIPE_EASEL);
 
-        CANVAS.artItem = new ArtItem.CraftableItem("CANVAS", Material.PAPER, ArtItem.CANVAS_KEY)
+        CANVAS.artItem = new ArtItem.CraftableItem("CANVAS", Material.RABBIT_HIDE, ArtItem.CANVAS_KEY)
 				.name(Lang.RECIPE_CANVAS_NAME)
 				.tooltip(Lang.Array.RECIPE_CANVAS);
+
+        MEDIUM_CANVAS.artItem = (new ArtItem.CraftableItem("MEDIUM_CANVAS", Material.PAPER, ArtItem.MEDIUM_CANVAS_KEY))
+                .name(Lang.RECIPE_MEDIUM_CANVAS_NAME)
+                .tooltip(Lang.Array.RECIPE_MEDIUM_CANVAS);
+
+        LARGE_CANVAS.artItem = (new ArtItem.CraftableItem("LARGE_CANVAS", Material.MAP, ArtItem.LARGE_CANVAS_KEY))
+                .name(Lang.RECIPE_LARGE_CANVAS_NAME)
+                .tooltip(Lang.Array.RECIPE_LARGE_CANVAS);
 
         MAP_ART.artItem = new ArtItem.ArtworkItem(-1, "Artwork", null, null);
 

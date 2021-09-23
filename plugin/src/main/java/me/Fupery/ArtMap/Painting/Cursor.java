@@ -15,9 +15,7 @@ class Cursor {
     private boolean yawOffCanvas;
     private boolean pitchOffCanvas;
 
-    Cursor(int yawOffset) {
-        PixelTableManager pixelTable = ArtMap.instance().getPixelTable();
-
+    Cursor(int yawOffset, PixelTableManager pixelTable) {
         yawTable = pixelTable.getYawBounds();
         pitchTables = pixelTable.getPitchBounds();
         this.yawOffset = yawOffset;

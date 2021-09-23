@@ -17,17 +17,17 @@ public class CompressedMap extends MapId {
         this.compressedMap = Arrays.copyOf(compressedMap, compressedMap.length);
     }
 
-    public static CompressedMap compress(MapView mapView) throws IOException {
-		return compress(mapView.getId(), ArtMap.instance().getReflection().getMap(mapView));
+    public static CompressedMap compress(MapView mapView, int resolution) throws IOException {
+		return compress(mapView.getId(), ArtMap.instance().getReflection().getMap(mapView), resolution);
     }
 
-    public static CompressedMap compress(int mapId, byte[] map) throws IOException {
-        byte[] compressed = new f32x32().generateBLOB(map);
+    public static CompressedMap compress(int mapId, byte[] map, int resolution) throws IOException {
+        byte[] compressed = new f32x32().generateBLOB(map, resolution);
         return new CompressedMap(mapId, Arrays.hashCode(map), compressed);
     }
 
-	public static CompressedMap compress(int newId, MapView mapView) throws IOException {
-		byte[] compressed = new f32x32().generateBLOB(ArtMap.instance().getReflection().getMap(mapView));
+	public static CompressedMap compress(int newId, MapView mapView, int resolution) throws IOException {
+		byte[] compressed = new f32x32().generateBLOB(ArtMap.instance().getReflection().getMap(mapView), resolution);
 		return new CompressedMap(newId, Arrays.hashCode(ArtMap.instance().getReflection().getMap(mapView)), compressed);
 	}
 
@@ -35,7 +35,7 @@ public class CompressedMap extends MapId {
         return Arrays.copyOf(this.compressedMap, this.compressedMap.length);
     }
 
-    public byte[] decompressMap() {
-        return compressedMap == null ? new byte[Map.Size.MAX.value] : new f32x32().readBLOB(compressedMap);
+    public byte[] decompressMap(int resolution) {
+        return compressedMap == null ? new byte[Map.Size.MAX.value] : new f32x32().readBLOB(compressedMap, resolution);
     }
 }

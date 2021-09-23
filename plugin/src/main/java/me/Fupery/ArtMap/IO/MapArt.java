@@ -19,17 +19,19 @@ public class MapArt {
     private final UUID artist;
     private final String artistName;
     private final String date;
+    private final int resolution;
 
-    public MapArt(int mapIDValue, String title, UUID artist, String artistName, Date date) {
-        this(mapIDValue, title, artist, artistName, new SimpleDateFormat("dd-MM-yyyy").format(date));
+    public MapArt(int mapIDValue, String title, UUID artist, String artistName, Date date, int resolution) {
+        this(mapIDValue, title, artist, artistName, new SimpleDateFormat("dd-MM-yyyy").format(date), resolution);
     }
 
-    public MapArt(int id, String title, UUID artist, String artistName, String date) {
+    public MapArt(int id, String title, UUID artist, String artistName, String date, int resolution) {
         this.id = id;
         this.title = title;
         this.artist = artist;
         this.date = date;
         this.artistName = artistName;
+        this.resolution = resolution;
     }
 
     public OfflinePlayer getArtistPlayer() {
@@ -89,18 +91,22 @@ public class MapArt {
     }
 
     public MapArt setAristName(String name) {
-        return new MapArt(this.id, title, this.artist, name, this.date);
+        return new MapArt(this.id, title, this.artist, name, this.date, this.resolution);
     }
 
     public MapArt updateMapId(int newID) {
-        return new MapArt(newID, title, artist, artistName, date);
+        return new MapArt(newID, title, artist, artistName, date, resolution);
     }
 
 	public MapArt setTitle(String title) {
-		return new MapArt(this.id, title, this.artist, this.artistName, this.date);
+		return new MapArt(this.id, title, this.artist, this.artistName, this.date, resolution);
 	}
 
     public Map getMap() {
         return new Map(id);
+    }
+
+    public int getResolution() {
+        return this.resolution;
     }
 }

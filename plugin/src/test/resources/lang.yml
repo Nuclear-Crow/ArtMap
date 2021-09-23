@@ -193,6 +193,12 @@ RECIPE_EASEL:
   - "§cany painting on it."
   - "§cSave first!"
 RECIPE_CANVAS:
+  - "§7§o32x32"
+  - "§b§oPaint on me!"
+  - "§7Use on an §aEasel"
+  - "§7to start painting."
+RECIPE_MEDIUM_CANVAS:
+  - "§7§o64x64"
   - "§b§oPaint on me!"
   - "§7Use on an §aEasel"
   - "§7to start painting."

@@ -34,7 +34,7 @@ class PlayerCommandPreListener implements RegisteredListener {
 			ArtMap.instance().getArtistHandler().getCurrentSession(event.getPlayer()).isInArtKit()){
 			String message = event.getMessage().toLowerCase();
 			if(message.startsWith("/") && blacklist.contains(message.substring(1))) {
-				event.setCancelled​(true);
+				event.setCancelled(true);
 				event.getPlayer().sendMessage(Lang.PREFIX + ChatColor.RED + "This command can't be used at an easle.");
 			}
 		}

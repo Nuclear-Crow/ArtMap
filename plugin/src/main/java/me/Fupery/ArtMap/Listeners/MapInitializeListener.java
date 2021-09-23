@@ -2,6 +2,7 @@ package me.Fupery.ArtMap.Listeners;
 
 import java.util.logging.Level;
 
+import me.Fupery.ArtMap.IO.MapArt;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.server.MapInitializeEvent;
 
@@ -19,7 +20,11 @@ public class MapInitializeListener implements RegisteredListener {
                     if (!ArtMap.instance().getArtDatabase().containsArtwork(mapId))
                         return;
                     Map map = new Map(mapId);
-                    ArtMap.instance().getArtDatabase().restoreMap(map, true, false);
+                    MapArt art = ArtMap.instance().getArtDatabase().getArtwork(mapId);
+                    int resolution = 4;
+                    if (art != null)
+                        resolution = art.getResolution();
+                    ArtMap.instance().getArtDatabase().restoreMap(map, true, false, resolution);
                 } catch (Exception e) {
                     ArtMap.instance().getLogger().log(Level.SEVERE, "Error with map restore!", e);
                 }

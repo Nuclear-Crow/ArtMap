@@ -209,19 +209,19 @@ public class CommandExport extends AsyncCommand {
                     Map map = ArtMap.instance().getArtDatabase().createMap();
                     CompressedMap cMap = new CompressedMap(map.getMapId(), this.hash,
                             Base64.getDecoder().decode(this.mapData));
-                    map.setMap(cMap.decompressMap(), true);
+                    map.setMap(cMap.decompressMap(4), true);
                     MapArt check = ArtMap.instance().getArtDatabase().getArtwork(this.title);
                     if (check != null) {
                         // art with this title all ready exists see if its the same artwork (artist,and
                         // hash) otherwise increment name by 1
                         if (check.getArtist().equals(this.artist)
-                                && check.getMap().compress().getHash().equals(this.hash)) {
+                                && check.getMap().compress(4).getHash().equals(this.hash)) {
                             throw new DuplicateArtworkException("Artwok all ready in database");
                         }
                         this.title = this.title + "_1";
                     }
                     // null artistname since its dropped when importing into the database.
-                    MapArt mapArt = new MapArt(map.getMapId(), this.title, this.artist, null, this.date);
+                    MapArt mapArt = new MapArt(map.getMapId(), this.title, this.artist, null, this.date, 4);
                     ArtMap.instance().getArtDatabase().saveArtwork(mapArt, cMap);
                     sender.sendMessage(this.title + " :: Import Successful!");
                 } catch (DuplicateArtworkException dae) {

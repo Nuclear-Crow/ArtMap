@@ -9,11 +9,10 @@ import java.io.IOException;
  */
 public class f32x32 implements MapFormatter {
     private static byte[] foldMap(byte[] mapData, int magnitude) {
-        byte[] foldedData = new byte[Map.Size.STANDARD.value];
+        byte[] foldedData = new byte[Map.Size.MAX.value / magnitude * magnitude];
         for (int x = 0; x < 128; x += magnitude) {
-            for (int y = 0; y < 128; y += magnitude) {
-                foldedData[(x / magnitude) + ((y / magnitude) * 32)] = mapData[x + (y * 128)];
-            }
+            for (int y = 0; y < 128; y += magnitude)
+                foldedData[x / magnitude + y / magnitude * 32] = mapData[x + y * 128];
         }
         return foldedData;
     }
@@ -35,12 +34,12 @@ public class f32x32 implements MapFormatter {
     }
 
     @Override
-    public byte[] generateBLOB(byte[] mapData) throws IOException {
+    public byte[] generateBLOB(byte[] mapData, int resolution) throws IOException {
         byte[] compressedData;
         if (mapData.length == Map.Size.STANDARD.value) {
             compressedData = Compressor.compress(mapData);
         } else if (mapData.length == Map.Size.MAX.value) {
-            compressedData = Compressor.compress(foldMap(mapData, 4));
+            compressedData = Compressor.compress(foldMap(mapData, resolution));
         } else {
             throw new IOException("Invalid MapData!");
         }
@@ -48,8 +47,8 @@ public class f32x32 implements MapFormatter {
     }
 
     @Override
-    public byte[] readBLOB(byte[] blobData) {
+    public byte[] readBLOB(byte[] blobData, int resolution) {
         byte[] decompressedData = Compressor.decompress(blobData);
-        return unfoldMap(decompressedData, 4);
+        return unfoldMap(decompressedData, resolution);
     }
 }
