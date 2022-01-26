@@ -1,15 +1,14 @@
 package me.Fupery.ArtMap.Easel;
 
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import me.Fupery.ArtMap.Recipe.ArtMaterial;
 import org.bukkit.Bukkit;
+import me.Fupery.ArtMap.Recipe.ArtMaterial;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.MapMeta;
 
 import me.Fupery.ArtMap.ArtMap;
@@ -18,67 +17,93 @@ import me.Fupery.ArtMap.IO.MapArt;
 import me.Fupery.ArtMap.IO.Database.Map;
 import me.Fupery.ArtMap.Recipe.ArtItem;
 import me.Fupery.ArtMap.Recipe.ArtItem.InProgressArtworkItem;
-import me.Fupery.ArtMap.Utils.ItemUtils;
+import me.Fupery.ArtMap.api.Config.Lang;
 
 /**
- * Represents a painting canvas. Extends ItemStack so that information can be
- * retrieved when it is pulled off the easel.
+ * Represents a painting canvas..
  *
  */
 public class Canvas {
 
 	protected int mapId;
+	protected String artist;
 	protected int resolution = 4;
 
-	public Canvas(Map map, ArtMaterial material) {
-		this(map.getMapId(), getResolutionFactorFromArtMaterial(material));
-	}
-
-	public Canvas(int mapId, ArtMaterial material) {
-		this(mapId, getResolutionFactorFromArtMaterial(material));
-	}
-
-	public Canvas(Map map, int resolution) {
-		this(map.getMapId(), resolution);
-	}
-
-	public Canvas(int mapId, int resolution) {
-		this.mapId = mapId;
+	public Canvas(Map map, String artist, int resolution) {
+		this.mapId = map.getMapId();
+		this.artist = artist;
 		this.resolution = resolution;
 	}
+
+	protected Canvas(int mapId, String artist, ArtMaterial material) {
+		this.mapId = mapId;
+		this.artist = artist;
+		this.resolution = getResolutionFactorFromArtMaterial(material);
+	}
+
 
 	public static Canvas getCanvas(ItemStack item) throws SQLException, ArtMapException {
 		if (item == null || item.getType() != Material.FILLED_MAP)
 			return null;
 
+		//Is this an unfinished artwork?
+		if(ArtItem.isUnfinishedArtwork(item)) {
+			//extract artist and id
+			MapMeta meta = (MapMeta) item.getItemMeta();
+			int mapId = meta.getMapView().getId();
+			return new Canvas(mapId, parseArtist(meta.getLore()));
+		}
+
+		//Is this a copy artwork?
+		if(ArtItem.isCopyArtwork(item)) {
+			//Extract id, artist, and original title
+			MapMeta meta = (MapMeta) item.getItemMeta();
+			int mapId = meta.getMapView().getId();
+			MapArt original = ArtMap.instance().getArtDatabase().getArtwork(meta.getDisplayName());
+			return new CanvasCopy(new Map(mapId), original);
+		}
+
+		//Check if this is an artmap tracked piece. Legacy check.
 		MapMeta meta = (MapMeta) item.getItemMeta();
 		int mapId = meta.getMapView().getId();
-		if (item.getItemMeta() != null && item.getItemMeta().getLore() != null
-				&& item.getItemMeta().getLore().contains(ArtItem.COPY_KEY)) {
-			return new CanvasCopy(item, getResolutionFactorFromMap(item));
+		//unsaved
+		if(ArtMap.instance().getArtDatabase().containsUnsavedArtwork(mapId)){
+			return new Canvas(mapId, "unknown");
 		}
-		return new Canvas(mapId, getResolutionFactorFromMap(item));
+		//previously saved but missing tags
+		MapArt art = ArtMap.instance().getArtDatabase().getArtwork(mapId);
+		if(art != null) {
+			return new CanvasCopy(art.getMap(), art);
+		}
+		return null;
+
+	}
+
+	/**
+	 * Parse the artist name out of the lore String.
+	 * @param meta List of Strings that is the item meta
+	 * @return The Artist name.
+	 */
+	public static String parseArtist(List<String> meta) {
+		String key = Lang.RECIPE_ARTWORK_ARTIST.get().replace("%s", "").trim();
+		Optional<String> artistName = meta.stream().filter(s -> s.contains(key)).findFirst();
+		if(artistName.isPresent()) {
+			return artistName.get().replace(key, "").trim();
+		}
+		return null;
 	}
 
 	public ItemStack getEaselItem() {
-		ItemStack item = new InProgressArtworkItem(this.mapId).toItemStack();
-		ItemMeta meta = item.getItemMeta();
-		List<String> lore = meta.getLore();
-		if (isMedium()) {
-			lore.add(ArtItem.MEDIUM_CANVAS_KEY);
-		}
-		else if (isLarge()) {
-			lore.add(ArtItem.LARGE_CANVAS_KEY);
-		}
-		meta.setLore(lore);
-		item.setItemMeta(meta);
-		return item;
+		return new InProgressArtworkItem(this.mapId, artist).toItemStack();
 	}
 
 	public int getMapId() {
 		return this.mapId;
 	}
 
+	/**
+	 *
+	 */
 	public int getResolution() {
 		return this.resolution;
 	}
@@ -123,46 +148,14 @@ public class Canvas {
 
 		private MapArt original;
 
-		public CanvasCopy(Map map, MapArt orginal) {
-			super(map, orginal.getResolution());
-			this.original = orginal;
+		public CanvasCopy(Map map, MapArt original) {
+			super(map,original.getArtistName(), original.getResolution());
+			this.original = original;
 		}
-
-		public CanvasCopy(ItemStack map, int resolution) throws SQLException, ArtMapException {
-			super(ItemUtils.getMapID(map), resolution);
-			ItemMeta meta = map.getItemMeta();
-			List<String> lore = meta.getLore();
-			if (lore == null || !lore.contains(ArtItem.COPY_KEY)) {
-				throw new ArtMapException("The Copied canvas is missing the copy key!");
-			}
-			String originalName = lore.get(lore.indexOf(ArtItem.COPY_KEY) + 1);
-			this.original = ArtMap.instance().getArtDatabase().getArtwork(originalName);
-		}
-
-		/*
-		@Override
-		public ItemStack getDroppedItem() {
-			return this.original.getMapItem();
-		}
-		*/
 
 		@Override
 		public ItemStack getEaselItem() {
-			ItemStack mapItem = new ItemStack(Material.FILLED_MAP);
-			MapMeta meta = (MapMeta) mapItem.getItemMeta();
-			meta.setMapView(ArtMap.getMap(this.mapId));
-			// Set copy lore
-			if (isMedium()) {
-				meta.setLore(Arrays.asList(ArtItem.MEDIUM_CANVAS_KEY, ArtItem.COPY_KEY, this.original.getTitle()));
-			}
-			else if (isLarge()) {
-				meta.setLore(Arrays.asList(ArtItem.LARGE_CANVAS_KEY, ArtItem.COPY_KEY, this.original.getTitle()));
-			}
-			else {
-				meta.setLore(Arrays.asList(ArtItem.COPY_KEY, this.original.getTitle()));
-			}
-			mapItem.setItemMeta(meta);
-			return mapItem;
+			return new ArtItem.CopyArtworkItem(this.mapId, original.getTitle(), original.getArtistName(), original.getDate()).toItemStack();
 		}
 
 		/**

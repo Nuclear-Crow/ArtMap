@@ -45,7 +45,13 @@ public class CompatibilityManager implements RegionHandler {
                     regionHandler.getClass().getSimpleName().replace("Compat", "")));
         }
 
-        palette = new Palette_1_16();
+        //figure out palette version to load
+        BukkitVersion version = VersionHandler.checkVersion();
+        if(version.isLessThan(BukkitVersion.v1_18)) {
+            palette = new Palette_1_16();
+        } else {
+            palette = new Palette_1_18();
+        }
     }
 
     public boolean isPluginLoaded(String pluginName) {

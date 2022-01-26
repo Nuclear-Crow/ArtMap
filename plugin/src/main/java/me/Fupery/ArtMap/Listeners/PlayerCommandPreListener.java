@@ -4,11 +4,8 @@ package me.Fupery.ArtMap.Listeners;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.Cancellable;
 
 import me.Fupery.ArtMap.ArtMap;
 import me.Fupery.ArtMap.api.Config.Lang;
