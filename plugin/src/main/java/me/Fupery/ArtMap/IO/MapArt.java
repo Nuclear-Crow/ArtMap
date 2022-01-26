@@ -67,7 +67,7 @@ public class MapArt {
     }
 
     public ItemStack getMapItem() {
-        return new ArtItem.ArtworkItem(id, title, artistName, date).toItemStack();
+        return new ArtItem.ArtworkItem(id, title, artistName, date, resolution).toItemStack();
     }
 
     public int getMapId() {

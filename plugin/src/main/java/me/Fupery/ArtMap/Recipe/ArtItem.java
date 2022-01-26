@@ -6,11 +6,13 @@ import static org.bukkit.ChatColor.ITALIC;
 import static org.bukkit.ChatColor.YELLOW;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.logging.Level;
 
 import me.Fupery.ArtMap.Easel.Canvas;
 import me.Fupery.ArtMap.Exception.ArtMapException;
+import me.Fupery.ArtMap.IO.MapArt;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -100,7 +102,7 @@ public class ArtItem {
                 && itemStack.getType() == Material.FILLED_MAP
 		        && itemStack.hasItemMeta()) {
             ItemMeta itemMeta = itemStack.getItemMeta();
-            if (itemMeta.hasLore() && itemMeta.getLore().get(0).contains(COPY_TAG)) {
+            if (itemMeta.hasLore() && itemMeta.getLore().contains(COPY_TAG)) {
                 return true;
             }
         }
@@ -129,14 +131,22 @@ public class ArtItem {
          * @param artistName - The name of the artist.
          * @param date - The date the item was created.
          */
-        public ArtworkItem(int id, String title, String artistName, String date) {
-			super(new ItemStack(Material.FILLED_MAP), ARTWORK_TAG);
-			MapMeta meta = (MapMeta) this.stack.get().getItemMeta();
-			meta.setMapView(ArtMap.getMap(id));
-			this.stack.get().setItemMeta(meta);
+        public ArtworkItem(int id, String title, String artistName, String date, int resolution) {
+            super(new ItemStack(Material.FILLED_MAP), ARTWORK_TAG);
+            MapMeta meta = (MapMeta) this.stack.get().getItemMeta();
+            meta.setMapView(ArtMap.getMap(id));
+            this.stack.get().setItemMeta(meta);
             name(title);
             String artist = GOLD + String.format(Lang.RECIPE_ARTWORK_ARTIST.get(), (YELLOW + artistName));
-            tooltip(artist, String.valueOf(DARK_GREEN) + ITALIC + date);
+            if (resolution == 2) {
+                tooltip(MEDIUM_CANVAS_KEY, artist, String.valueOf(DARK_GREEN) + ITALIC + date);
+            }
+            else if (resolution == 1) {
+                tooltip(LARGE_CANVAS_KEY, artist, String.valueOf(DARK_GREEN) + ITALIC + date);
+            }
+            else {
+                tooltip(artist, String.valueOf(DARK_GREEN) + ITALIC + date);
+            }
         }
     }
 
@@ -145,14 +155,22 @@ public class ArtItem {
          * Creates an in progress artwork item.
          * @param id - The map id of the inprogress artwork.
          */
-        public InProgressArtworkItem(int id, String artistName) {
+        public InProgressArtworkItem(int id, String artistName, int resolution) {
 			super(new ItemStack(Material.FILLED_MAP), UNFINISHED_TAG);
 			MapMeta meta = (MapMeta) this.stack.get().getItemMeta();
 			meta.setMapView(ArtMap.getMap(id));
 			this.stack.get().setItemMeta(meta);
             name("Unfinished");
             String artist = GOLD + String.format(Lang.RECIPE_ARTWORK_ARTIST.get(), (YELLOW + artistName));
-            tooltip(artist);
+            if (resolution == 2) {
+                tooltip(ArtItem.MEDIUM_CANVAS_KEY, artist);
+            }
+            else if (resolution == 1) {
+                tooltip(ArtItem.LARGE_CANVAS_KEY, artist);
+            }
+            else {
+                tooltip(artist);
+            }
         }
     }
 
@@ -161,14 +179,22 @@ public class ArtItem {
          * Creates a copy artowrk item.
          * @param id
          */
-        public CopyArtworkItem(int id, String title, String artistName, String date) {
+        public CopyArtworkItem(int id, String title, String artistName, String date, MapArt original) {
 			super(new ItemStack(Material.FILLED_MAP), COPY_TAG);
 			MapMeta meta = (MapMeta) this.stack.get().getItemMeta();
 			meta.setMapView(ArtMap.getMap(id));
 			this.stack.get().setItemMeta(meta);
             name(title);
             String artist = GOLD + String.format(Lang.RECIPE_ARTWORK_ARTIST.get(), (YELLOW + artistName));
-            tooltip(artist, String.valueOf(DARK_GREEN) + ITALIC + date);
+            if (original.getResolution() == 2) {
+                tooltip(ArtItem.MEDIUM_CANVAS_KEY, artist, String.valueOf(DARK_GREEN) + ITALIC + date);
+            }
+            else if (original.getResolution() == 1) {
+                tooltip(ArtItem.LARGE_CANVAS_KEY, artist, String.valueOf(DARK_GREEN) + ITALIC + date);
+            }
+            else {
+                tooltip(artist, String.valueOf(DARK_GREEN) + ITALIC + date);
+            }
         }
     }
 

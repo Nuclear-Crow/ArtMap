@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import me.Fupery.ArtMap.Recipe.ArtMaterial;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.MapMeta;
 
 import me.Fupery.ArtMap.ArtMap;
@@ -35,12 +36,23 @@ public class Canvas {
 		this.resolution = resolution;
 	}
 
+	protected Canvas(Map map, String artist, ArtMaterial material) {
+		this.mapId = map.getMapId();
+		this.artist = artist;
+		this.resolution = getResolutionFactorFromArtMaterial(material);
+	}
+
 	protected Canvas(int mapId, String artist, ArtMaterial material) {
 		this.mapId = mapId;
 		this.artist = artist;
 		this.resolution = getResolutionFactorFromArtMaterial(material);
 	}
 
+	protected Canvas(int mapId, String artist, int resolution) {
+		this.mapId = mapId;
+		this.artist = artist;
+		this.resolution = resolution;
+	}
 
 	public static Canvas getCanvas(ItemStack item) throws SQLException, ArtMapException {
 		if (item == null || item.getType() != Material.FILLED_MAP)
@@ -51,7 +63,7 @@ public class Canvas {
 			//extract artist and id
 			MapMeta meta = (MapMeta) item.getItemMeta();
 			int mapId = meta.getMapView().getId();
-			return new Canvas(mapId, parseArtist(meta.getLore()));
+			return new Canvas(mapId, parseArtist(meta.getLore()), getResolutionFactorFromMap(item));
 		}
 
 		//Is this a copy artwork?
@@ -68,7 +80,7 @@ public class Canvas {
 		int mapId = meta.getMapView().getId();
 		//unsaved
 		if(ArtMap.instance().getArtDatabase().containsUnsavedArtwork(mapId)){
-			return new Canvas(mapId, "unknown");
+			return new Canvas(mapId, "unknown", getResolutionFactorFromMap(item));
 		}
 		//previously saved but missing tags
 		MapArt art = ArtMap.instance().getArtDatabase().getArtwork(mapId);
@@ -94,7 +106,7 @@ public class Canvas {
 	}
 
 	public ItemStack getEaselItem() {
-		return new InProgressArtworkItem(this.mapId, artist).toItemStack();
+		return new InProgressArtworkItem(this.mapId, artist, resolution).toItemStack();
 	}
 
 	public int getMapId() {
@@ -106,14 +118,6 @@ public class Canvas {
 	 */
 	public int getResolution() {
 		return this.resolution;
-	}
-
-	public boolean isMedium() {
-		return this.resolution == 2;
-	}
-
-	public boolean isLarge() {
-		return this.resolution == 1;
 	}
 
 	public static int getResolutionFactorFromArtMaterial(ArtMaterial material) {
@@ -155,7 +159,7 @@ public class Canvas {
 
 		@Override
 		public ItemStack getEaselItem() {
-			return new ArtItem.CopyArtworkItem(this.mapId, original.getTitle(), original.getArtistName(), original.getDate()).toItemStack();
+			return new ArtItem.CopyArtworkItem(this.mapId, original.getTitle(), original.getArtistName(), original.getDate(), original).toItemStack();
 		}
 
 		/**

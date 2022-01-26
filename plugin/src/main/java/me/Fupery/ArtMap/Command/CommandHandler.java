@@ -110,7 +110,8 @@ public class CommandHandler implements CommandExecutor {
 									sender.sendMessage(Lang.PREFIX + ChatColor.RED + "No unsaved artwork with that ID.");
 									return;
 								}
-								item = new ArtItem.InProgressArtworkItem(id, player.getName()).toItemStack();
+								// TODO: CCNet - Add an argument for the resolution
+								item = new ArtItem.InProgressArtworkItem(id, player.getName(), 4).toItemStack();
 							} catch( Exception e) {
 								sender.sendMessage(Lang.PREFIX + ChatColor.RED + "Error retrieving art! Check logs for details.");
 								ArtMap.instance().getLogger().log(Level.SEVERE, "Error retrieving art!", e);
