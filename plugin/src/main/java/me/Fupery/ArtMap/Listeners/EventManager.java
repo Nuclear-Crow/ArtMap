@@ -23,6 +23,12 @@ public class EventManager {
         listeners.add(new PlayerSwapHandListener());
         listeners.add(new PlayerDismountListener());
         listeners.add(new PlayerJoinEventListener());
+
+        // CCNet - Movecraft compat
+        if (plugin.getServer().getPluginManager().isPluginEnabled("Movecraft")) {
+            listeners.add(new MovecraftListener());
+        }
+
 		PlayerCommandPreListener compre = new PlayerCommandPreListener();
 		compre.getBlacklist();
         listeners.add(compre);

@@ -257,7 +257,7 @@ public class HeadsCache {
 			//If mojang is disabled try and get it
 			if(!plugin.getConfiguration().HEAD_FETCH_MOJANG) {
 				if (skullMetaCache.containsKey(playerId)) {
-					return skullMetaCache.get(playerId);
+					return Optional.of(skullMetaCache.get(playerId));
 				}
 				ItemStack head = new ItemStack(Material.PLAYER_HEAD, 1);
 				SkullMeta meta = (SkullMeta) head.getItemMeta();
@@ -267,7 +267,7 @@ public class HeadsCache {
 					meta.setDisplayName(player.getName());
 					skullMetaCache.put(playerId, meta);
 					head.setItemMeta(meta);
-					return meta;
+					return Optional.of(meta);
 				}
 			}
 			return null;
