@@ -1,33 +1,25 @@
 package me.Fupery.ArtMap.Painting;
 
-import me.Fupery.ArtMap.ArtMap;
-import me.Fupery.ArtMap.IO.PixelTableManager;
-
 class Cursor {
-
-    private final float[] yawTable;
-    private final Object[] pitchTables;
     private final int limit;
+    private final int resolutionFactor;
     private final int yawOffset;
     private int x, y;
     private float pitch, yaw;
-    private float leftBound, rightBound, upBound, downBound;
     private boolean yawOffCanvas;
     private boolean pitchOffCanvas;
+    private final float playerToCanvasHorizontalDistance = 0.6480925F; //If you come up with a good way to calculate this at runtime, please implement that.
+    private final float playerToCanvasVerticalDistance = -0.00287597F; //If you come up with a good way to calculate this at runtime, please implement that.
 
-    Cursor(int yawOffset, PixelTableManager pixelTable) {
-        yawTable = pixelTable.getYawBounds();
-        pitchTables = pixelTable.getPitchBounds();
+    Cursor(int yawOffset, int resolutionFactor) {
         this.yawOffset = yawOffset;
-        limit = (128 / pixelTable.getResolutionFactor()) - 1;
+        this.resolutionFactor = resolutionFactor;
+        limit = (128 / resolutionFactor) - 1;
         yawOffCanvas = false;
         pitchOffCanvas = false;
         int mid = limit / 2;
         x = mid;
         y = mid;
-
-        updateYawBounds();
-        updatePitchBounds();
     }
 
     void setPitch(float pitch) {
@@ -41,33 +33,25 @@ class Cursor {
         if (Math.abs(this.yaw - yaw) > .0001) {
             this.yaw = yaw;
             updateXPos();
+            updateYPos(); // Might be a bit counterintuitive, but while pitch can only affect Y, yaw can affect both X and Y
         }
     }
 
     private void updateXPos() {
-        float yaw = getAdjustedYaw();
+        float yaw = (float)Math.toRadians(getAdjustedYaw());
 
-        while (yaw < leftBound && x > 0) {
-            x--;
-            updateYawBounds();
-        }
-        while (yaw > rightBound && x < limit) {
-            x++;
-            updateYawBounds();
-        }
+        float physicalX = (float)(Math.tan(yaw)*playerToCanvasHorizontalDistance); //This is the coordinate within canvas' plane, with the middle of canvas being the coordinate origin
+        x = (int)Math.floor( (physicalX + 0.5)*128/resolutionFactor );
+        x = clampCoordinate(x);
     }
 
     private void updateYPos() {
-        float pitch = getAdjustedPitch();
+        float pitch = (float)Math.toRadians(getAdjustedPitch());
+        float yaw = (float)Math.toRadians(getAdjustedYaw());
 
-        while (pitch < upBound && y > 0) {
-            y--;
-            updatePitchBounds();
-        }
-        while (pitch > downBound && y < limit) {
-            y++;
-            updatePitchBounds();
-        }
+        float physicalY = (float)(Math.tan(pitch)/Math.cos(yaw)*playerToCanvasHorizontalDistance + playerToCanvasVerticalDistance); //This is the coordinate within canvas' plane, with the middle of canvas being the coordinate origin
+        y = (int)Math.floor( (physicalY + 0.5)*128/resolutionFactor );
+        y = clampCoordinate(y);
     }
 
     private float getAdjustedYaw() {
@@ -102,20 +86,13 @@ class Cursor {
         return value;
     }
 
-    private void updateYawBounds() {
-        leftBound = yawTable[x];
-        rightBound = yawTable[x + 1];
-        updatePitchBounds();
+    private int clampCoordinate(int val){
+        if(val>limit) return limit;
+        if(val<0) return 0;
+        return val;
     }
 
-    private void updatePitchBounds() {
-        upBound = ((float[]) pitchTables[x])[y];
-        downBound = ((float[]) pitchTables[x])[y + 1];
-    }
-
-    int getX() {
-        return x;
-    }
+    int getX() {return x;}
 
     int getY() {
         return y;

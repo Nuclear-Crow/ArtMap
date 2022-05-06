@@ -4,7 +4,6 @@ import me.Fupery.ArtMap.ArtMap;
 import me.Fupery.ArtMap.IO.Database.Map;
 import me.Fupery.ArtMap.api.Painting.ICanvasRenderer;
 import me.Fupery.ArtMap.api.Painting.Pixel;
-import me.Fupery.ArtMap.IO.PixelTableManager;
 import org.bukkit.entity.Player;
 import org.bukkit.map.MapCanvas;
 import org.bukkit.map.MapRenderer;
@@ -24,19 +23,13 @@ public class CanvasRenderer extends MapRenderer implements ICanvasRenderer {
     private AtomicBoolean active;
     private Cursor cursor;
 
-    CanvasRenderer(Map map, int yawOffset, PixelTableManager pixelTable) {
+    CanvasRenderer(Map map, int yawOffset, int resolutionFactor) {
         this.map = map;
-        if (pixelTable == null) {
-            resolutionFactor = 0;
-            axisLength = 0;
-            maxUpdate = 0;
-            return;
-        }
-        resolutionFactor = pixelTable.getResolutionFactor();
+        this.resolutionFactor = resolutionFactor;
         axisLength = 128 / resolutionFactor;
         maxUpdate = 16384;// TODO: 22/09/2016 magic value
         loadMap();
-        cursor = new Cursor(yawOffset, pixelTable);
+        cursor = new Cursor(yawOffset, resolutionFactor);
         active = new AtomicBoolean(true);
     }
 

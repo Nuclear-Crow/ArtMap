@@ -23,7 +23,6 @@
 		<module>compatibility/Essentials</module>
 		<module>compatibility/Towny</module>
 		<module>compatibility/WorldGuard</module>
-		<module>DataTables</module>
 		<module>plugin</module>
 	</modules>
 

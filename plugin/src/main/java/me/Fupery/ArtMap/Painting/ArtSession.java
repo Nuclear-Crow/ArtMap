@@ -12,7 +12,6 @@ import java.util.logging.Level;
 
 import me.Fupery.ArtMap.Easel.Canvas;
 import me.Fupery.ArtMap.Exception.ArtMapException;
-import me.Fupery.ArtMap.IO.PixelTableManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -63,8 +62,7 @@ public class ArtSession implements IArtSession {
         catch (SQLException | ArtMapException ex) {
             ArtMap.instance().getLogger().severe("Could not load art session: failed to get canvas");
         }
-        PixelTableManager pixelTable = ArtMap.getPixelTable(resolution);
-        canvas = new CanvasRenderer(map, yawOffset, pixelTable);
+        canvas = new CanvasRenderer(map, yawOffset, resolution);
         currentBrush = null;
         lastStroke = System.currentTimeMillis();
         DYE = new Dye(canvas, player);
